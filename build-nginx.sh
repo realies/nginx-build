@@ -46,6 +46,9 @@ apt-get update && apt-get -y install \
   dirmngr \
   libssl-dev
 
+# Clone nginx-rtmp-module
+git clone https://github.com/arut/nginx-rtmp-module $BPATH
+
 # Download the source files
 curl -L $SOURCE_PCRE$VERSION_PCRE.tar.gz -o $BPATH/PCRE.tar.gz && \
   echo "${SHA256_PCRE} ${BPATH}/PCRE.tar.gz" | sha256sum -c -
@@ -155,8 +158,9 @@ cd $BPATH/$VERSION_NGINX
 --without-http_ssi_module \
 --without-mail_imap_module \
 --without-mail_pop3_module \
---without-mail_smtp_module
-make
+--without-mail_smtp_module \
+--add-module=$BPATH/nginx-rtmp-module
+make -j4
 make install
 make clean
 strip -s /usr/sbin/nginx*
